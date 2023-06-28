@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -47,7 +48,7 @@ class CategoryController extends Controller
     public function show(Category $category, Request $request, $id)
     {
         $dataId = Category::find($id);
-        return $dataId;
+        return new CategoryResource($dataId);
     }
 
     /**

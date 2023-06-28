@@ -21,27 +21,10 @@ use App\Http\Controllers\AuthController;
 //     return $request->user();
 // });
 
-// Route::post('/login',[AuthController::class,'login']);
-// Route::get('/logout',[AuthController::class,'logout'])->middleware(['auth:sanctum']);
-// Route::post('/register',[AuthController::class,'register']);
-
-// Route::prefix('/products')->group(function () {
-//     Route::get('/',[ProductController::class,'index'])->middleware(['auth:sanctum']);
-//     Route::get('/{id}',[ProductController::class,'show'])->middleware(['auth:sanctum']);
-//     Route::post('/',[ProductController::class,'store'])->middleware(['auth:sanctum']);
-//     Route::post('/{id}',[ProductController::class,'update'])->middleware(['auth:sanctum']);
-//     Route::delete('/{id}',[ProductController::class,'destroy'])->middleware(['auth:sanctum']);
-// });
-
-// Route::prefix('/categories')->group(function () {
-//     Route::get('/',[CategoryController::class,'index'])->middleware(['auth:sanctum']);
-//     Route::get('/{id}',[CategoryController::class,'show'])->middleware(['auth:sanctum']);
-//     Route::post('/',[CategoryController::class,'store'])->middleware(['auth:sanctum']);
-//     Route::post('/{id}',[CategoryController::class,'update'])->middleware(['auth:sanctum']);
-//     Route::delete('/{id}',[CategoryController::class,'destroy'])->middleware(['auth:sanctum']);
-// });
-
-
+Route::post('/login',[AuthController::class,'login']);
+Route::get('/logout',[AuthController::class,'logout'])->middleware(['auth:sanctum']);
+Route::get('/me',[AuthController::class,'me'])->middleware(['auth:sanctum']);
+Route::post('/register',[AuthController::class,'register']);
 
 Route::prefix('/products')->group(function () {
     Route::get('/',[ProductController::class,'index']);
@@ -59,3 +42,6 @@ Route::prefix('/categories')->group(function () {
     Route::post('/{id}',[CategoryController::class,'update']);
     Route::delete('/{id}',[CategoryController::class,'destroy']);
 });
+
+
+

@@ -40,8 +40,6 @@ class ProductController extends Controller
     {
         
         $validasi=$request->validate([
-            'user_id' => 'required',
-            'category_id' => 'required',
             'title' => 'required',
             'desc' => 'required',
             'file' => 'required',
@@ -61,8 +59,8 @@ class ProductController extends Controller
         $response->save();
         return response()->json([
             'success' => true,
-            'message' => 'success'
-        ]);
+            'message' => 'Data berhasil ditambahkan'
+        ],);
 
        
     }
@@ -91,8 +89,6 @@ class ProductController extends Controller
     public function update(Request $request, Product $product, $id)
     {
         $validasi=$request->validate([
-            'user_id' => 'required',
-            'category_id' => 'required',
             'title' => 'required',
             'desc' => 'required',
             'file' => 'required',
@@ -103,13 +99,14 @@ class ProductController extends Controller
         $fileName = $this->generateRandomString();
         $extension = $request->file->extension();
 
-        if (!$productId->image) {
-            Storage::delete('photos/' .$productId->image);
+        if ($request->hasFile('file')) {
+            if (!$productId->image) {
+                Storage::delete('photos/' .$productId->image);
+            }
+    
+            Storage::putFileAs('photos', $request->file, $fileName.'.'.$extension);
+            $productId->image = $fileName.'.'.$extension;
         }
-
-        Storage::putFileAs('photos', $request->file, $fileName.'.'.$extension);
-        $productId->user_id = $request->input('user_id');
-        $productId->category_id = $request->input('category_id');
         $productId->title = $request->input('title');
         $productId->desc = $request->input('desc');
         $productId->image = $fileName.'.'.$extension;
@@ -117,7 +114,7 @@ class ProductController extends Controller
         $productId->save();
         return response()->json([
             'message' => 'Data berhasil di update',
-            'data' => $productId
+            'success' => true
         ]);
     }
 
@@ -132,7 +129,8 @@ class ProductController extends Controller
         }
         $productId->delete();
         return response()->json([
-            'message' => 'Data berhasil dihapus'
+            'message' => 'Data berhasil dihapus',
+            'success' => true
         ]);
     }
 

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -35,20 +36,28 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
         
-        $user = User::where('email', $request->email)->first();
+        try {
+            $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Data tidak valid'],
-            ]);
+            if (! $user || ! Hash::check($request->password, $user->password)) {
+                throw ValidationException::withMessages([
+                    'email' => ['Data tidak valid'],
+                ]);
+            }
+            $token = $user->createToken('chairish')->plainTextToken;
+            return response()->json(['message' => 'Login berhasil', 'token' => $token,'success' => true],200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Login gagal', 'success' => false]);
         }
-
-        return $user->createToken('jooragan')->plainTextToken;
 
     }
 
     public function logout(Request $request) {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Anda berhasil logout']);
+    }
+
+    public function me() {
+        return response()->json(Auth::user());
     }
 }
